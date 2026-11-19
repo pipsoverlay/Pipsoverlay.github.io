@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Pips Overlay — Precision. Strategy. Performance. Investment management and advisory insights.">
+  <meta name="theme-color" content="#08182b">
+  <title>Pips Overlay | Precision. Strategy. Performance.</title>
+  <style>
+    :root{--navy:#08182b;--navy2:#102943;--gold:#c8a96a;--gold2:#e4cf9f;--ink:#172536;--muted:#687789;--paper:#f6f7f8;--white:#fff;--line:#e4e8ed}
+    *{box-sizing:border-box} html{scroll-behavior:smooth} body{margin:0;font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:var(--ink);background:#fff;line-height:1.65}
+    a{color:inherit;text-decoration:none}.wrap{width:min(1160px,calc(100% - 44px));margin:auto}
+    header{position:sticky;top:0;z-index:10;background:rgba(8,24,43,.97);backdrop-filter:blur(12px);border-bottom:1px solid rgba(255,255,255,.1)}
+    .nav{height:78px;display:flex;align-items:center;justify-content:space-between;gap:24px}.brand{display:flex;align-items:center;gap:12px;color:#fff;font-weight:750;letter-spacing:.08em}.mark{width:37px;height:37px;border:1px solid var(--gold);display:grid;place-items:center;color:var(--gold);font-family:Georgia,serif;font-size:22px}.brand small{display:block;color:#b7c2cf;font-size:9px;letter-spacing:.24em;font-weight:500;margin-top:-4px}
+    nav{display:flex;align-items:center;gap:28px;color:#d6dee7;font-size:13px}nav a:hover{color:var(--gold2)}.nav-cta{border:1px solid var(--gold);padding:10px 16px;color:var(--gold2)}
+    .hero{background:radial-gradient(ellipse at 78% 45%,rgba(200,169,106,.15),transparent 34%),linear-gradient(120deg,#08182b,#102943);color:#fff;padding:112px 0 105px;position:relative;overflow:hidden}
+    .hero:after{content:"";position:absolute;right:-90px;top:20px;width:510px;height:510px;border:1px solid rgba(200,169,106,.18);transform:rotate(45deg);box-shadow:0 0 0 55px rgba(200,169,106,.025),0 0 0 110px rgba(200,169,106,.02)}
+    .eyebrow{color:var(--gold2);font-size:11px;letter-spacing:.24em;text-transform:uppercase;font-weight:700}.hero h1{font-family:Georgia,"Times New Roman",serif;font-weight:400;font-size:clamp(44px,6vw,76px);line-height:1.08;max-width:760px;margin:22px 0}.hero h1 em{color:var(--gold2);font-style:normal}.hero p{max-width:590px;color:#c4cfda;font-size:17px;margin:0 0 32px}.actions{display:flex;gap:14px;flex-wrap:wrap}.btn{display:inline-block;padding:13px 21px;font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase}.btn-gold{background:var(--gold);color:#08182b}.btn-outline{border:1px solid rgba(255,255,255,.4);color:#fff}
+    .trust{background:#f5f6f7;border-bottom:1px solid var(--line)}.trust-inner{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;padding:24px 0}.trust strong{display:block;color:var(--navy);font-family:Georgia,serif;font-size:18px;font-weight:400}.trust span{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+    section{padding:88px 0}.section-head{max-width:680px;margin-bottom:42px}.section-head .eyebrow{color:#9a7a3f}.section-head h2{font:400 clamp(32px,4vw,48px)/1.15 Georgia,serif;color:var(--navy);margin:13px 0}.section-head p{color:var(--muted);margin:0}
+    .intro-grid{display:grid;grid-template-columns:1fr 1fr;gap:70px;align-items:center}.quote-panel{background:var(--navy);color:#fff;padding:42px;min-height:290px;display:flex;flex-direction:column;justify-content:space-between;position:relative}.quote-panel:before{content:"";position:absolute;inset:16px;border:1px solid rgba(200,169,106,.35);pointer-events:none}.quote-panel blockquote{font:400 29px/1.35 Georgia,serif;margin:0;position:relative}.quote-panel span{color:var(--gold2);font-size:11px;letter-spacing:.15em;text-transform:uppercase;position:relative}
+    .services{background:var(--paper)}.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}.card{background:#fff;border:1px solid var(--line);padding:30px 27px;min-height:245px}.num{color:#a78950;font:italic 23px Georgia,serif}.card h3{font:400 23px Georgia,serif;color:var(--navy);margin:17px 0 10px}.card p{font-size:14px;color:var(--muted);margin:0}
+    .approach-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:25px}.step{border-top:2px solid var(--gold);padding-top:18px}.step h3{font:400 20px Georgia,serif;color:var(--navy);margin:8px 0}.step p{font-size:13px;color:var(--muted);margin:0}.step b{font-size:10px;color:#9a7a3f;letter-spacing:.15em}
+    .cta{background:var(--navy);color:#fff;text-align:center;padding:76px 0}.cta h2{font:400 clamp(32px,4vw,46px) Georgia,serif;margin:10px 0}.cta p{color:#c4cfda;max-width:620px;margin:0 auto 26px}
+    footer{background:#061321;color:#b7c2cf;padding:38px 0 24px}.footer-top{display:flex;justify-content:space-between;gap:30px;align-items:flex-start}.footer-brand{color:#fff}.footer-links{display:flex;gap:22px;flex-wrap:wrap;font-size:12px}.legal{border-top:1px solid rgba(255,255,255,.12);margin-top:28px;padding-top:20px;font-size:11px;color:#8998a8}.legal p{max-width:980px;margin:8px 0}.copyright{margin-top:18px;color:#728295;font-size:11px}
+    @media(max-width:760px){.nav{height:auto;min-height:70px;flex-wrap:wrap;padding:14px 0}nav{width:100%;overflow:auto;gap:18px;padding-bottom:4px}nav a{white-space:nowrap}.nav-cta{display:none}.hero{padding:78px 0}.trust-inner{grid-template-columns:1fr;gap:14px}.intro-grid{grid-template-columns:1fr;gap:30px}.cards{grid-template-columns:1fr}.approach-grid{grid-template-columns:1fr 1fr}.footer-top{flex-direction:column}section{padding:65px 0}}
+    @media(max-width:420px){.approach-grid{grid-template-columns:1fr}.wrap{width:min(100% - 32px,1160px)}}
+  </style>
+</head>
+<body>
+<header>
+  <div class="wrap nav">
+    <a class="brand" href="#home" aria-label="Pips Overlay home"><span class="mark">P</span><span>PIPS OVERLAY<small>INVESTMENT MANAGEMENT</small></span></a>
+    <nav aria-label="Main navigation">
+      <a href="#about">About</a><a href="#services">What We Do</a><a href="#approach">Our Approach</a><a href="#contact">Contact</a>
+    </nav>
+    <a class="nav-cta" href="#contact">Start a Conversation</a>
+  </div>
+</header>
+<main>
+  <section class="hero" id="home">
+    <div class="wrap">
+      <div class="eyebrow">Investment Management · Investment Advisory</div>
+      <h1>Precision. Strategy.<br><em>Performance.</em></h1>
+      <p>A thoughtful approach to investment management and advisory—grounded in research, disciplined decision-making and a clear understanding of risk.</p>
+      <div class="actions"><a class="btn btn-gold" href="#services">Explore Our Approach</a><a class="btn btn-outline" href="#about">Discover Pips Overlay</a></div>
+    </div>
+  </section>
+  <div class="trust"><div class="wrap trust-inner">
+    <div><strong>Research-led thinking</strong><span>Decisions informed by analysis</span></div>
+    <div><strong>Risk awareness</strong><span>Risk considered at every stage</span></div>
+    <div><strong>Long-term perspective</strong><span>Purpose beyond the short term</span></div>
+  </div></div>
+  <section id="about">
+    <div class="wrap intro-grid">
+      <div class="section-head">
+        <div class="eyebrow">Who We Are</div>
+        <h2>A considered perspective on investing.</h2>
+        <p>Pips Overlay is a developing investment management and advisory brand built around a simple belief: sound investment decisions begin with clear objectives, careful research and an honest understanding of risk.</p>
+        <p>Our ambition is to make investment thinking more structured, transparent and accessible to a broad range of investors.</p>
+      </div>
+      <div class="quote-panel"><blockquote>“Clarity in the process. Discipline in the decisions. Perspective in every market.”</blockquote><span>The Pips Overlay philosophy</span></div>
+    </div>
+  </section>
+  <section class="services" id="services">
+    <div class="wrap">
+      <div class="section-head"><div class="eyebrow">What We Do</div><h2>Investment insight, built around your objectives.</h2><p>Explore the areas that define the Pips Overlay proposition. Specific services will be offered only where appropriately authorized and operationally available.</p></div>
+      <div class="cards">
+        <article class="card"><div class="num">01</div><h3>Investment Management</h3><p>A disciplined framework for portfolio objectives, asset allocation considerations and ongoing risk review.</p></article>
+        <article class="card"><div class="num">02</div><h3>Investment Advisory</h3><p>Research-informed perspectives designed to support clearer investment decisions and better questions.</p></article>
+        <article class="card"><div class="num">03</div><h3>Market Research</h3><p>Structured market observations, strategy analysis and education to help investors understand changing conditions.</p></article>
+      </div>
+    </div>
+  </section>
+  <section id="approach">
+    <div class="wrap">
+      <div class="section-head"><div class="eyebrow">Our Approach</div><h2>Principles before predictions.</h2><p>Markets are uncertain. A repeatable process can help bring structure to the decisions investors make.</p></div>
+      <div class="approach-grid">
+        <div class="step"><b>01 / UNDERSTAND</b><h3>Define the objective</h3><p>Start with goals, time horizon, constraints and risk tolerance.</p></div>
+        <div class="step"><b>02 / RESEARCH</b><h3>Assess the evidence</h3><p>Consider relevant information, market conditions and alternative scenarios.</p></div>
+        <div class="step"><b>03 / EVALUATE</b><h3>Consider the risk</h3><p>Examine uncertainty, downside exposure, liquidity and suitability.</p></div>
+        <div class="step"><b>04 / REVIEW</b><h3>Stay disciplined</h3><p>Monitor assumptions and revisit decisions as circumstances change.</p></div>
+      </div>
+    </div>
+  </section>
+  <section class="cta" id="contact">
+    <div class="wrap"><div class="eyebrow">Connect With Pips Overlay</div><h2>Start with a conversation.</h2><p>For general enquiries, partnership discussions or information about the Pips Overlay brand, get in touch.</p><a class="btn btn-gold" href="mailto:YOUR-EMAIL@example.com">Email Pips Overlay</a></div>
+  </section>
+</main>
+<footer>
+  <div class="wrap">
+    <div class="footer-top">
+      <div class="brand footer-brand"><span class="mark">P</span><span>PIPS OVERLAY<small>PRECISION. STRATEGY. PERFORMANCE.</small></span></div>
+      <div class="footer-links"><a href="#about">About</a><a href="#services">What We Do</a><a href="#approach">Our Approach</a><a href="#contact">Contact</a></div>
+    </div>
+    <div class="legal">
+      <strong>Important information</strong>
+      <p>This website is a general brand and informational template. It does not constitute investment advice, an offer, solicitation, recommendation or promise of returns. Investing involves risk, including possible loss of principal. No investment outcomes are guaranteed.</p>
+      <p>Before publishing claims about regulated investment management or advisory services, add the correct legal entity name, jurisdiction, registration or licensing details (where applicable), approved service descriptions, privacy policy and jurisdiction-specific disclosures. Do not imply that Pips Overlay is licensed, registered, managing client assets or accepting investments unless that is accurate and legally authorized.</p>
+      <p>Replace the placeholder email address before publishing. Website content should be reviewed by qualified legal and compliance professionals for the jurisdictions in which the business operates.</p>
+    </div>
+    <div class="copyright">© <span id="year">2026</span> Pips Overlay. All rights reserved.</div>
+  </div>
+</footer>
+</body>
+</html>
