@@ -138,7 +138,39 @@
   <section class="cta" id="contact">
     <div class="wrap"><div class="eyebrow">Connect With Pips Overlay</div><h2>Start with a conversation.</h2><p>For general enquiries, partnership discussions or information about the Pips Overlay brand, get in touch.</p><a class="btn btn-gold" href="mailto:pipsoverlay@gmail.com">Email Pips Overlay</a><p style="margin-top:18px;color:#e4cf9f;">Email: <a href="mailto:pipsoverlay@gmail.com">pipsoverlay@gmail.com</a></p></div>
   </section>
-</main>
+<section id="login">
+  <h2>Member Access</h2>
+  <p>Welcome to Pips Overlay. Create an account or sign in using the same form.</p>
+
+  <div id="po-auth-panel" class="po-panel">
+    <form id="po-auth-form">
+      <label for="po-auth-email">Email address</label>
+      <input id="po-auth-email" type="email" autocomplete="email" required>
+
+      <label for="po-auth-password">Password</label>
+      <input id="po-auth-password" type="password" autocomplete="current-password" minlength="8" required>
+
+      <button type="submit" name="action" value="signup">Create Account</button>
+      <button type="submit" name="action" value="login">Sign In</button>
+    </form>
+
+    <button type="button" id="po-reset-button">Forgot Password?</button>
+  </div>
+
+  <div id="po-dashboard" class="po-panel" hidden>
+    <h3>Member Dashboard</h3>
+    <p id="po-member-email"></p>
+    <p>Your account has been approved.</p>
+
+    <h3>Account Services</h3>
+    <p>Deposit and withdrawal services are currently unavailable.</p>
+    <button type="button" disabled>Deposit — Unavailable</button>
+    <button type="button" disabled>Withdrawal — Unavailable</button>
+  </div>
+
+  <div id="po-message" class="po-message" role="status" aria-live="polite" hidden></div>
+  <button type="button" id="po-logout-button" hidden>Logout</button>
+</section></main>
 <footer>
   <div class="wrap">
     <div class="footer-top">
@@ -224,59 +256,10 @@
 </style>
 
 
-<section id="login">
-  <h2>Member Access</h2>
-  <p>Welcome to Pips Overlay. Register or sign in to access your member account.</p>
 
-  <div id="po-auth-panel" class="po-panel">
-    <h3>Create an Account</h3>
-
-    <form id="po-signup-form">
-      <label for="po-signup-email">Email address</label>
-      <input id="po-signup-email" type="email" autocomplete="email" required>
-
-      <label for="po-signup-password">Create password</label>
-      <input id="po-signup-password" type="password"
-        autocomplete="new-password" minlength="8" required>
-
-      <button type="submit">Sign Up</button>
-    </form>
-
-    <hr>
-
-    <h3>Member Login</h3>
-
-    <form id="po-login-form">
-      <label for="po-login-email">Email address</label>
-      <input id="po-login-email" type="email" autocomplete="email" required>
-
-      <label for="po-login-password">Password</label>
-      <input id="po-login-password" type="password"
-        autocomplete="current-password" required>
-
-      <button type="submit">Login</button>
-    </form>
-
-    <button type="button" id="po-reset-button">Forgot Password?</button>
-  </div>
-
-  <div id="po-dashboard" class="po-panel" hidden>
-    <h3>Member Dashboard</h3>
-    <p id="po-member-email"></p>
-    <p>Your account has been approved.</p>
-
-    <h3>Account Services</h3>
-    <p>Deposit and withdrawal services are currently unavailable.</p>
-    <button type="button" disabled>Deposit — Unavailable</button>
-    <button type="button" disabled>Withdrawal — Unavailable</button>
-
-    
-</div>
-  <div id="po-message" class="po-message" role="status" aria-live="polite" hidden></div>
-<button type="button" id="po-logout-button" hidden>Logout</button>
-</section>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
+
 
 (() => {
   const SUPABASE_URL = "https://kkebzamrgagushppflab.supabase.co";
@@ -288,6 +271,7 @@
   );
 
   const authPanel = document.getElementById("po-auth-panel");
+  const authForm = document.getElementById("po-auth-form");
   const dashboard = document.getElementById("po-dashboard");
   const message = document.getElementById("po-message");
   const logoutButton = document.getElementById("po-logout-button");
@@ -342,14 +326,15 @@
     }
   }
 
-  document.getElementById("po-signup-form")
-    .addEventListener("submit", async (event) => {
-      event.preventDefault();
-      message.hidden = true;
+  authForm.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    message.hidden = true;
 
-      const email = document.getElementById("po-signup-email").value.trim();
-      const password = document.getElementById("po-signup-password").value;
+    const email = document.getElementById("po-auth-email").value.trim();
+    const password = document.getElementById("po-auth-password").value;
+    const action = event.submitter?.value;
 
+    if (action === "signup") {
       const { error } = await client.auth.signUp({
         email,
         password,
@@ -363,16 +348,7 @@
       } else {
         showMessage("Registration received! Please check your email and click the confirmation link. Your account will then await administrator approval.");
       }
-    });
-
-  document.getElementById("po-login-form")
-    .addEventListener("submit", async (event) => {
-      event.preventDefault();
-      message.hidden = true;
-
-      const email = document.getElementById("po-login-email").value.trim();
-      const password = document.getElementById("po-login-password").value;
-
+    } else if (action === "login") {
       const { data, error } = await client.auth.signInWithPassword({
         email,
         password
@@ -383,14 +359,15 @@
       } else if (data.user) {
         await checkMember(data.user);
       }
-    });
+    }
+  });
 
   document.getElementById("po-reset-button")
     .addEventListener("click", async () => {
-      const email = document.getElementById("po-login-email").value.trim();
+      const email = document.getElementById("po-auth-email").value.trim();
 
       if (!email) {
-        showMessage("Enter your email address in the login field first.");
+        showMessage("Enter your email address first.");
         return;
       }
 
