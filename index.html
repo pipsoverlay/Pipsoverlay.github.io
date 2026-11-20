@@ -157,16 +157,88 @@
     <button type="button" id="po-reset-button">Forgot Password?</button>
   </div>
 
-  <div id="po-dashboard" class="po-panel" hidden>
-    <h3>Member Dashboard</h3>
-    <p id="po-member-email"></p>
-    <p>Your account has been approved.</p>
+  
+<div id="po-dashboard" class="po-panel" hidden>
+  <div class="po-dashboard-header">
+    <div>
+      <p class="po-eyebrow">PIPS OVERLAY · MEMBER PORTAL</p>
+      <h2>Portfolio Dashboard</h2>
+      <p id="po-member-email"></p>
+    </div>
+    <span class="po-status">Account Approved</span>
+  </div>
 
+  <div class="po-overview">
+    <div class="po-stat">
+      <span>Total Portfolio Value</span>
+      <strong id="po-portfolio-total">$0.00</strong>
+      <small>USD · Based on recorded holdings</small>
+    </div>
+    <div class="po-stat">
+      <span>My Portfolios</span>
+      <strong id="po-portfolio-count">0</strong>
+      <small>Personal portfolios</small>
+    </div>
+    <div class="po-stat">
+      <span>Asset Categories</span>
+      <strong>Stocks & Crypto</strong>
+      <small>Portfolio tracking</small>
+    </div>
+  </div>
+
+  <div class="po-dashboard-section">
+    <h3>My Portfolios</h3>
+    <p>Create and manage separate portfolios.</p>
+    <input id="po-new-portfolio-name" type="text"
+      placeholder="Enter portfolio name">
+    <button type="button" id="po-create-portfolio">Create Portfolio</button>
+    <select id="po-portfolio-select">
+      <option value="">Select a portfolio</option>
+    </select>
+  </div>
+
+  <div class="po-dashboard-section">
+    <h3>Portfolio Holdings</h3>
+
+    <label for="po-asset-type">Asset Category</label>
+    <select id="po-asset-type">
+      <option value="stock">Stock</option>
+      <option value="crypto">Cryptocurrency</option>
+    </select>
+
+    <label for="po-asset-symbol">Asset Symbol</label>
+    <input id="po-asset-symbol" type="text" placeholder="AAPL or BTC">
+
+    <label for="po-asset-name">Asset Name</label>
+    <input id="po-asset-name" type="text" placeholder="Apple Inc. or Bitcoin">
+
+    <label for="po-asset-quantity">Quantity Held</label>
+    <input id="po-asset-quantity" type="number" min="0.00000001" step="any">
+
+    <label for="po-asset-cost">Average Cost Per Unit (USD)</label>
+    <input id="po-asset-cost" type="number" min="0" step="any">
+
+    <button type="button" id="po-add-holding">Add Holding</button>
+
+    <h4>My Assets</h4>
+    <div id="po-holdings-list">
+      <p>No holdings recorded yet.</p>
+    </div>
+  </div>
+
+  <div id="po-admin-panel" class="po-dashboard-section" hidden>
+    <h3>Administrator Management</h3>
+    <p>Manage member portfolios and holdings.</p>
+  </div>
+
+  <div class="po-dashboard-section">
     <h3>Account Services</h3>
-    <p>Deposit and withdrawal services are currently unavailable.</p>
+    <p>Real-money deposits, withdrawals and trading are unavailable.</p>
     <button type="button" disabled>Deposit — Unavailable</button>
     <button type="button" disabled>Withdrawal — Unavailable</button>
   </div>
+</div>
+
 
   <div id="po-message" class="po-message" role="status" aria-live="polite" hidden></div>
   <button type="button" id="po-logout-button" hidden>Logout</button>
