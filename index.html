@@ -158,11 +158,13 @@
   </div>
 
   
+
 <div id="po-dashboard" class="po-panel" hidden>
+
   <div class="po-dashboard-header">
     <div>
       <p class="po-eyebrow">PIPS OVERLAY · MEMBER PORTAL</p>
-      <h2>Portfolio Dashboard</h2>
+      <h2>Portfolio Overview</h2>
       <p id="po-member-email"></p>
     </div>
     <span class="po-status">Account Approved</span>
@@ -170,7 +172,7 @@
 
   <div class="po-overview">
     <div class="po-stat">
-      <span>Total Portfolio Value</span>
+      <span>Total Recorded Cost</span>
       <strong id="po-portfolio-total">$0.00</strong>
       <small>USD · Based on recorded holdings</small>
     </div>
@@ -181,24 +183,33 @@
     </div>
     <div class="po-stat">
       <span>Asset Categories</span>
-      <strong>Stocks & Crypto</strong>
+      <strong>Stocks &amp; Crypto</strong>
       <small>Portfolio tracking</small>
     </div>
   </div>
 
   <div class="po-dashboard-section">
+    <p class="po-eyebrow">PORTFOLIO MANAGEMENT</p>
     <h3>My Portfolios</h3>
-    <p>Create and manage separate portfolios.</p>
+    <p>Create and organize separate portfolios.</p>
+
     <input id="po-new-portfolio-name" type="text"
-      placeholder="Enter portfolio name">
-    <button type="button" id="po-create-portfolio">Create Portfolio</button>
+      placeholder="Enter a portfolio name">
+
+    <button type="button" id="po-create-portfolio">
+      + Create Portfolio
+    </button>
+
+    <label for="po-portfolio-select">Select Portfolio</label>
     <select id="po-portfolio-select">
       <option value="">Select a portfolio</option>
     </select>
   </div>
 
   <div class="po-dashboard-section">
+    <p class="po-eyebrow">ASSET TRACKING</p>
     <h3>Portfolio Holdings</h3>
+    <p>Add and manage the stocks and cryptocurrencies you track.</p>
 
     <label for="po-asset-type">Asset Category</label>
     <select id="po-asset-type">
@@ -227,16 +238,18 @@
   </div>
 
   <div id="po-admin-panel" class="po-dashboard-section" hidden>
+    <p class="po-eyebrow">ADMINISTRATION</p>
     <h3>Administrator Management</h3>
     <p>Manage member portfolios and holdings.</p>
   </div>
 
   <div class="po-dashboard-section">
-    <h3>Account Services</h3>
-    <p>Real-money deposits, withdrawals and trading are unavailable.</p>
-    <button type="button" disabled>Deposit — Unavailable</button>
-    <button type="button" disabled>Withdrawal — Unavailable</button>
+    <p class="po-eyebrow">ACCOUNT SERVICES</p>
+    <h3>Withdrawal</h3>
+    <p>Withdrawal services are currently unavailable.</p>
+    <button type="button" disabled>Withdraw Funds</button>
   </div>
+
 </div>
 
 
@@ -325,6 +338,180 @@
   #login [hidden] {
     display: none !important;
   }
+/* PIPS OVERLAY PROFESSIONAL DASHBOARD */
+
+#login {
+  max-width: 1100px !important;
+  width: calc(100% - 32px) !important;
+  margin: 48px auto !important;
+  padding: 30px !important;
+}
+
+#login #po-dashboard {
+  padding: 0;
+}
+
+#login #po-dashboard .po-dashboard-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 20px;
+  padding: 26px;
+  background: linear-gradient(135deg, #08182b, #153653);
+  border: 1px solid #c8a96a;
+  border-radius: 14px;
+}
+
+#login #po-dashboard .po-dashboard-header h2 {
+  color: #fff;
+  font: 400 30px Georgia, serif;
+  margin: 8px 0;
+}
+
+#login #po-dashboard #po-member-email {
+  color: #c4cfda;
+  overflow-wrap: anywhere;
+}
+
+#login #po-dashboard .po-status {
+  background: #e4cf9f;
+  color: #08182b;
+  padding: 7px 13px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+#login #po-dashboard .po-overview {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+  margin: 20px 0;
+}
+
+#login #po-dashboard .po-stat {
+  background: #fff;
+  color: #172536;
+  border: 1px solid #e4e8ed;
+  border-radius: 12px;
+  padding: 22px;
+  min-width: 0;
+}
+
+#login #po-dashboard .po-stat span {
+  display: block;
+  color: #687789;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: .08em;
+}
+
+#login #po-dashboard .po-stat strong {
+  display: block;
+  color: #08182b;
+  font: 400 25px Georgia, serif;
+  overflow-wrap: anywhere;
+}
+
+#login #po-dashboard .po-stat small {
+  color: #687789;
+  font-size: 11px;
+}
+
+#login #po-dashboard .po-dashboard-section {
+  background: #fff;
+  color: #172536;
+  border: 1px solid #e4e8ed;
+  border-radius: 12px;
+  padding: 25px;
+  margin: 18px 0;
+}
+
+#login #po-dashboard .po-dashboard-section h3 {
+  color: #08182b;
+  font: 400 24px Georgia, serif;
+  margin: 5px 0;
+}
+
+#login #po-dashboard .po-dashboard-section h4 {
+  color: #08182b;
+  margin-top: 24px;
+}
+
+#login #po-dashboard .po-dashboard-section p:not(.po-eyebrow) {
+  color: #687789;
+}
+
+#login #po-dashboard .po-eyebrow {
+  color: #9a7a3f;
+  font-size: 10px;
+  letter-spacing: .14em;
+  margin: 0;
+}
+
+#login #po-dashboard input,
+#login #po-dashboard select {
+  width: 100%;
+  padding: 13px;
+  margin: 8px 0 16px;
+  border: 1px solid #d8dee7;
+  border-radius: 7px;
+  background: #f8fafc;
+  color: #172536;
+  box-sizing: border-box;
+}
+
+#login #po-dashboard button {
+  background: #c8a96a;
+  color: #08182b;
+  padding: 12px 18px;
+  border: 0;
+  border-radius: 7px;
+  font-weight: bold;
+}
+
+#login #po-dashboard button:disabled {
+  background: #d8dee7;
+  color: #526174;
+  opacity: .7;
+  cursor: not-allowed;
+}
+
+#login #po-dashboard #po-holdings-list {
+  border-top: 1px solid #e4e8ed;
+  margin-top: 12px;
+}
+
+#login #po-dashboard .po-holding-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 14px;
+  padding: 15px 0;
+  border-bottom: 1px solid #e4e8ed;
+}
+
+#login #po-dashboard .po-holding-item p {
+  font-size: 13px;
+}
+
+@media (max-width: 700px) {
+  #login {
+    padding: 16px !important;
+  }
+
+  #login #po-dashboard .po-overview {
+    grid-template-columns: 1fr;
+  }
+
+  #login #po-dashboard .po-dashboard-header,
+  #login #po-dashboard .po-dashboard-section {
+    padding: 18px;
+  }
+}
+
 </style>
 
 
