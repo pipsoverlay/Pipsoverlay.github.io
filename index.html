@@ -335,7 +335,7 @@
 
 (() => {
   const SUPABASE_URL = "https://kkebzamrgagushppflab.supabase.co";
-  const SUPABASE_KEY = "sb_publishable_GMsM39Jtt3XhnSlcatQV7w_DHYzBWqf";
+  const SUPABASE_KEY = "sb_publishable_GMsM39Jtt3XhnSlcatQV7w_DHYZBWqf";
 
   const client = window.supabase.createClient(
     SUPABASE_URL,
@@ -348,6 +348,11 @@
   const message = document.getElementById("po-message");
   const logoutButton = document.getElementById("po-logout-button");
 
+  const $ = (id) => document.getElementById(id);
+
+  let currentUser = null;
+  let currentProfile = null;
+
   function showMessage(text) {
     message.textContent = text;
     message.hidden = false;
@@ -357,19 +362,151 @@
     authPanel.hidden = false;
     dashboard.hidden = true;
     logoutButton.hidden = true;
+    $("po-admin-panel").hidden = true;
   }
 
   function showPending() {
     authPanel.hidden = true;
     dashboard.hidden = true;
     logoutButton.hidden = false;
-    showMessage("Your email is verified, but your account is awaiting Pips Overlay administrator approval. Please check back later.");
+    showMessage(
+      "Your email is verified, but your account is awaiting Pips Overlay administrator approval."
+    );
+  }
+
+  async function loadPortfolioTotal() {
+    const { data, error } = await client
+      .from("portfolio_holdings")
+      .select("quantity, average_cost_usd")
+      .eq("owner_id", currentUser.id);
+
+    if (error) {
+      showMessage("Could not calculate your recorded portfolio cost: " + error.message);
+      return;
+    }
+
+    const total = (data || []).reduce(
+      (sum, item) =>
+        sum + Number(item.quantity) * Number(item.average_cost_usd),
+      0
+    );
+
+    $("po-portfolio-total").textContent =
+      total.toLocaleString("en-US", {
+        style: "currency",
+        currency: "USD"
+      });
+  }
+
+  async function loadHoldings(portfolioId) {
+    const list = $("po-holdings-list");
+    list.textContent = "Loading holdings...";
+
+    const { data, error } = await client
+      .from("portfolio_holdings")
+      .select("*")
+      .eq("portfolio_id", portfolioId)
+      .order("created_at", { ascending: false });
+
+    if (error) {
+      list.textContent = "Could not load holdings: " + error.message;
+      return;
+    }
+
+    list.replaceChildren();
+
+    if (!data || data.length === 0) {
+      list.textContent = "No holdings recorded in this portfolio yet.";
+      return;
+    }
+
+    data.forEach((holding) => {
+      const item = document.createElement("div");
+      item.className = "po-holding-item";
+
+      const details = document.createElement("div");
+      const title = document.createElement("strong");
+      title.textContent =
+        holding.symbol + " — " + holding.asset_name;
+
+      const info = document.createElement("p");
+      info.textContent =
+        holding.asset_type.toUpperCase() +
+        " · Quantity: " + holding.quantity +
+        " · Average cost: $" +
+        Number(holding.average_cost_usd).toFixed(2);
+
+      details.append(title, info);
+
+      const remove = document.createElement("button");
+      remove.type = "button";
+      remove.textContent = "Remove";
+      remove.addEventListener("click", async () => {
+        if (!confirm("Remove this holding from your portfolio?")) return;
+
+        const { error: deleteError } = await client
+          .from("portfolio_holdings")
+          .delete()
+          .eq("id", holding.id);
+
+        if (deleteError) {
+          showMessage("Could not remove holding: " + deleteError.message);
+        } else {
+          await loadHoldings(portfolioId);
+          await loadPortfolioTotal();
+          showMessage("Holding removed.");
+        }
+      });
+
+      item.append(details, remove);
+      list.appendChild(item);
+    });
+  }
+
+  async function loadPortfolios() {
+    const select = $("po-portfolio-select");
+    select.replaceChildren();
+
+    const placeholder = document.createElement("option");
+    placeholder.value = "";
+    placeholder.textContent = "Select a portfolio";
+    select.appendChild(placeholder);
+
+    const { data, error } = await client
+      .from("portfolios")
+      .select("id, name")
+      .eq("owner_id", currentUser.id)
+      .order("created_at", { ascending: true });
+
+    if (error) {
+      showMessage("Could not load portfolios: " + error.message);
+      return;
+    }
+
+    $("po-portfolio-count").textContent = String(data.length);
+
+    data.forEach((portfolio) => {
+      const option = document.createElement("option");
+      option.value = portfolio.id;
+      option.textContent = portfolio.name;
+      select.appendChild(option);
+    });
+
+    if (data.length > 0) {
+      select.value = data[0].id;
+      await loadHoldings(data[0].id);
+    } else {
+      $("po-holdings-list").textContent =
+        "Create your first portfolio to get started.";
+    }
+
+    await loadPortfolioTotal();
   }
 
   async function checkMember(user) {
     const { data: profile, error } = await client
       .from("profiles")
-      .select("approval_status")
+      .select("approval_status, is_admin")
       .eq("id", user.id)
       .single();
 
@@ -380,30 +517,54 @@
       return;
     }
 
-    if (profile.approval_status === "approved") {
-      authPanel.hidden = true;
-      dashboard.hidden = false;
-      logoutButton.hidden = false;
+    currentUser = user;
+    currentProfile = profile;
 
-      document.getElementById("po-member-email").textContent =
-        "Signed in as: " + user.email;
-
-      message.hidden = true;
-    } else if (profile.approval_status === "pending") {
+    if (profile.approval_status === "pending") {
       showPending();
-    } else {
+      return;
+    }
+
+    if (profile.approval_status !== "approved") {
       await client.auth.signOut();
       showAuth();
       showMessage("Your account has not been approved. Please contact Pips Overlay.");
+      return;
     }
+
+    authPanel.hidden = true;
+    dashboard.hidden = false;
+    logoutButton.hidden = false;
+    message.hidden = true;
+
+    $("po-member-email").textContent = "Signed in as: " + user.email;
+
+    const totalLabel = document.querySelector(
+      "#po-dashboard .po-stat span"
+    );
+    const totalNote = document.querySelector(
+      "#po-dashboard .po-stat small"
+    );
+
+    totalLabel.textContent = "Total Recorded Cost";
+    totalNote.textContent = "USD · Quantity multiplied by average cost";
+
+    $("po-admin-panel").hidden = !profile.is_admin;
+
+    if (profile.is_admin) {
+      $("po-admin-panel").querySelector("p").textContent =
+        "Administrator access confirmed. Member portfolio management will be connected in the next step.";
+    }
+
+    await loadPortfolios();
   }
 
   authForm.addEventListener("submit", async (event) => {
     event.preventDefault();
     message.hidden = true;
 
-    const email = document.getElementById("po-auth-email").value.trim();
-    const password = document.getElementById("po-auth-password").value;
+    const email = $("po-auth-email").value.trim();
+    const password = $("po-auth-password").value;
     const action = event.submitter?.value;
 
     if (action === "signup") {
@@ -415,11 +576,11 @@
         }
       });
 
-      if (error) {
-        showMessage(error.message);
-      } else {
-        showMessage("Registration received! Please check your email and click the confirmation link. Your account will then await administrator approval.");
-      }
+      showMessage(
+        error
+          ? error.message
+          : "Registration received! Check your email to confirm your address. Your account will then await administrator approval."
+      );
     } else if (action === "login") {
       const { data, error } = await client.auth.signInWithPassword({
         email,
@@ -434,32 +595,113 @@
     }
   });
 
-  document.getElementById("po-reset-button")
-    .addEventListener("click", async () => {
-      const email = document.getElementById("po-auth-email").value.trim();
+  $("po-reset-button").addEventListener("click", async () => {
+    const email = $("po-auth-email").value.trim();
 
-      if (!email) {
-        showMessage("Enter your email address first.");
-        return;
-      }
+    if (!email) {
+      showMessage("Enter your email address first.");
+      return;
+    }
 
-      const { error } = await client.auth.resetPasswordForEmail(email, {
-        redirectTo: "https://pipsoverlay.github.io/"
-      });
-
-      showMessage(error ? error.message : "Password reset instructions have been sent if that email is registered.");
+    const { error } = await client.auth.resetPasswordForEmail(email, {
+      redirectTo: "https://pipsoverlay.github.io/"
     });
 
+    showMessage(
+      error
+        ? error.message
+        : "Password reset instructions have been sent if that email is registered."
+    );
+  });
+
+  $("po-create-portfolio").addEventListener("click", async () => {
+    const name = $("po-new-portfolio-name").value.trim();
+
+    if (!name) {
+      showMessage("Enter a name for your portfolio.");
+      return;
+    }
+
+    const { error } = await client
+      .from("portfolios")
+      .insert({
+        owner_id: currentUser.id,
+        name,
+        currency: "USD"
+      });
+
+    if (error) {
+      showMessage("Could not create portfolio: " + error.message);
+      return;
+    }
+
+    $("po-new-portfolio-name").value = "";
+    await loadPortfolios();
+    showMessage("Your portfolio has been created.");
+  });
+
+  $("po-portfolio-select").addEventListener("change", async (event) => {
+    if (event.target.value) {
+      await loadHoldings(event.target.value);
+    } else {
+      $("po-holdings-list").textContent = "Select a portfolio.";
+    }
+  });
+
+  $("po-add-holding").addEventListener("click", async () => {
+    const portfolioId = $("po-portfolio-select").value;
+    const assetType = $("po-asset-type").value;
+    const symbol = $("po-asset-symbol").value.trim().toUpperCase();
+    const assetName = $("po-asset-name").value.trim();
+    const quantity = Number($("po-asset-quantity").value);
+    const averageCost = Number($("po-asset-cost").value || 0);
+
+    if (!portfolioId) {
+      showMessage("Create or select a portfolio first.");
+      return;
+    }
+
+    if (!symbol || !assetName || !Number.isFinite(quantity) ||
+        quantity <= 0 || !Number.isFinite(averageCost) || averageCost < 0) {
+      showMessage("Enter a valid symbol, asset name, quantity and average cost.");
+      return;
+    }
+
+    const { error } = await client
+      .from("portfolio_holdings")
+      .insert({
+        portfolio_id: portfolioId,
+        owner_id: currentUser.id,
+        asset_type: assetType,
+        symbol,
+        asset_name: assetName,
+        quantity,
+        average_cost_usd: averageCost
+      });
+
+    if (error) {
+      showMessage("Could not add holding: " + error.message);
+      return;
+    }
+
+    $("po-asset-symbol").value = "";
+    $("po-asset-name").value = "";
+    $("po-asset-quantity").value = "";
+    $("po-asset-cost").value = "";
+
+    await loadHoldings(portfolioId);
+    await loadPortfolioTotal();
+    showMessage("Holding added to your portfolio.");
+  });
+
   logoutButton.addEventListener("click", async () => {
-    logoutButton.disabled = true;
-
     const { error } = await client.auth.signOut();
-
-    logoutButton.disabled = false;
 
     if (error) {
       showMessage(error.message);
     } else {
+      currentUser = null;
+      currentProfile = null;
       showAuth();
       showMessage("You have signed out.");
     }
